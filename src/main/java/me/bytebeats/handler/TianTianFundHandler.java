@@ -124,7 +124,6 @@ public class TianTianFundHandler extends AbstractHandler {
         }
         return data;
     }
-
     private void updateFund(Fund fund) {
         int idx = funds.indexOf(fund);
         if (idx > -1 && idx < funds.size()) {

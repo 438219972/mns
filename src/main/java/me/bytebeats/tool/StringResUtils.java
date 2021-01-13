@@ -14,6 +14,12 @@ public class StringResUtils {
     public static final String TIMESTAMP_FORMATTER = "yyyy-MM-dd HH:mm:ss";
     public static final String REFRESH_TIMESTAMP = "Updated at: %s";
 
+    //A股上证、深证前缀
+    public static final String A_SH_PREFIX = "sh";
+    public static final String A_S_SH_PREFIX = "s_sh";
+    public static final String A_SZ_PREFIX = "sz";
+    public static final String A_S_SZ_PREFIX = "s_sz";
+
     public static final String INDEX_NAME = "指数名称";
     public static final String INDEX_LATEST = "当前";
 

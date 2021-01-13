@@ -4,6 +4,7 @@ import me.bytebeats.OnSymbolSelectedListener;
 import me.bytebeats.SymbolParser;
 import me.bytebeats.handler.AbsStockHandler;
 import me.bytebeats.handler.TencentStockHandler;
+import me.bytebeats.tool.StringResUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -43,25 +44,28 @@ public class AStockWindow implements SymbolParser {
     @Override
     public String prefix() {
 //        return "sh";//实时数据
-        return "s_sh";//简要信息
+//        return "s_sh";//简要信息
+        return null;
     }
 
     @Override
     public String raw() {
-        return AppSettingState.getInstance().getShStocks();
+//        return AppSettingState.getInstance().getShStocks();
+        return null;
     }
 
     @Override
     public List<String> parse() {
         List<String> symbols = new ArrayList<>();
-        String sh = raw();
+//        String sh = raw();
+        String sh = AppSettingState.getInstance().getShStocks();
         assert sh != null;
         if (!sh.isEmpty()) {
-            Arrays.stream(sh.split("[,; ]")).filter(s -> !s.isEmpty()).forEach(s -> symbols.add(prefix() + s));
+            Arrays.stream(sh.split("[,; ]")).filter(s -> !s.isEmpty()).forEach(s -> symbols.add(StringResUtils.A_S_SH_PREFIX + s));
         }
         String sz = AppSettingState.getInstance().getSzStocks();
         if (!sz.isEmpty()) {
-            Arrays.stream(sz.split("[,; ]")).filter(s -> !s.isEmpty()).forEach(s -> symbols.add("s_sz" + s));
+            Arrays.stream(sz.split("[,; ]")).filter(s -> !s.isEmpty()).forEach(s -> symbols.add(StringResUtils.A_S_SZ_PREFIX + s));
         }
         return symbols;
     }

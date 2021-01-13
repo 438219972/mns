@@ -3,6 +3,8 @@ package me.bytebeats.handler;
 import me.bytebeats.HttpClientPool;
 import me.bytebeats.LogUtil;
 import me.bytebeats.meta.Stock;
+import me.bytebeats.tool.StringResUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.util.List;
@@ -83,14 +85,37 @@ public class TencentStockHandler extends AbsStockHandler {
 //                stock.setVolume(Double.parseDouble(metas[36]));
 //                stock.setTurnover(Double.parseDouble(metas[37]));
 //                stock.setMarketValue(Double.parseDouble(metas[45]));
+
+                String chPrefix = prefixTransform(symbol);
                 //简要信息
+                if(StringUtils.isNotBlank(chPrefix)){
+                    stock.setName(chPrefix+metas[1]);
+                } else {
+                    stock.setName(metas[1]);
+                }
                 stock.setSymbol(symbol);
-                stock.setName(metas[1]);
                 stock.setLatestPrice(Double.parseDouble(metas[3]));
                 stock.setChange(Double.parseDouble(metas[4]));
                 stock.setChangeRatio(Double.parseDouble(metas[5]));
                 updateStock(stock);
             }
         }
+    }
+
+    /**
+     * 前缀替换成中文
+     * @param symbol
+     * @return
+     */
+    private String prefixTransform(String symbol){
+        if(StringUtils.isNotBlank(symbol)){
+            if(symbol.indexOf(StringResUtils.A_S_SH_PREFIX) > -1){
+                return "[上证]";
+            }
+            if(symbol.indexOf(StringResUtils.A_S_SZ_PREFIX) > -1){
+                return "[深证]";
+            }
+        }
+        return null;
     }
 }
