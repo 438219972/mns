@@ -6,11 +6,17 @@ public class StringResUtils {
     public static final String A_STOCK = "CN";
     public static final String INDICES = "Index";
     public static final String QT_STOCK_URL = "http://qt.gtimg.cn/q=";//腾讯股票数据接口
+
+    // 列名
     public static final String STOCK_NAME = "股票名称";
     public static final String SYMBOL = "代码";
     public static final String STOCK_LATEST_PRICE = "当前价格";
     public static final String RISE_AND_FALL = "涨跌";
     public static final String RISE_AND_FALL_RATIO = "涨跌幅";
+    public static final String COST_PRICE = "成本价";
+    public static final String STOCK_NUM = "持股数";
+    public static final String PROFIT = "盈利";
+
     public static final String TIMESTAMP_FORMATTER = "yyyy-MM-dd HH:mm:ss";
     public static final String REFRESH_TIMESTAMP = "Updated at: %s";
 

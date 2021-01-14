@@ -13,6 +13,9 @@ public class Stock {
     private double volume = 0.0;//成交量
     private double turnover = 0.0;//成交额
     private double marketValue = 0.0;//成交额
+    private double costPrice  = 0.0;//成本价
+    private int stockNum = 0;//持股数
+    private double profit = 0.0;//盈利
 
     public Stock() {
 
@@ -100,6 +103,30 @@ public class Stock {
 
     public void setMarketValue(double marketValue) {
         this.marketValue = marketValue;
+    }
+
+    public double getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
+    }
+
+    public int getStockNum() {
+        return stockNum;
+    }
+
+    public void setStockNum(int stockNum) {
+        this.stockNum = stockNum;
+    }
+
+    public double getProfit() {
+        return profit;
+    }
+
+    public void setProfit(double profit) {
+        this.profit = profit;
     }
 
     @Override

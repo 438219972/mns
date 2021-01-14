@@ -23,9 +23,17 @@ public abstract class AbsStockHandler extends AbstractHandler implements UISetti
 
     protected final List<Stock> stocks = new ArrayList<>();
 
-    protected final int[] stockTabWidths = {0, 0, 0, 0, 0};
-    protected final String[] stockColumnNames = {StringResUtils.STOCK_NAME, StringResUtils.SYMBOL,
-            StringResUtils.STOCK_LATEST_PRICE, StringResUtils.RISE_AND_FALL, StringResUtils.RISE_AND_FALL_RATIO};
+    protected final int[] stockTabWidths = {0, 0, 0, 0, 0, 0, 0, 0};
+    protected final String[] stockColumnNames = {
+            StringResUtils.STOCK_NAME,
+            StringResUtils.SYMBOL,
+            StringResUtils.STOCK_LATEST_PRICE,
+            StringResUtils.RISE_AND_FALL,
+            StringResUtils.RISE_AND_FALL_RATIO,
+            StringResUtils.COST_PRICE,
+            StringResUtils.STOCK_NUM,
+            StringResUtils.PROFIT
+    };
 
     private OnSymbolSelectedListener listener;
 
@@ -80,7 +88,7 @@ public abstract class AbsStockHandler extends AbstractHandler implements UISetti
                 name = PinyinUtils.toPinyin(name);
             }
             data[i] = new Object[]{name, stock.getSymbol(), stock.getLatestPrice(), stock.getChange(),
-                    stock.getChangeRatioString()};
+                    stock.getChangeRatioString(),stock.getCostPrice(),stock.getStockNum(),stock.getProfit()};
         }
         return data;
     }

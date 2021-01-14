@@ -4,6 +4,7 @@ import me.bytebeats.HttpClientPool;
 import me.bytebeats.LogUtil;
 import me.bytebeats.meta.Stock;
 import me.bytebeats.tool.StringResUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -48,8 +49,9 @@ public class TencentStockHandler extends AbsStockHandler {
         for (int i = 0; i < symbols.size(); i++) {
             if (params.length() != 0) {
                 params.append(',');
+
             }
-            params.append(symbols.get(i));
+            params.append(getCode(symbols.get(i)));
         }
         try {
             String entity = HttpClientPool.getInstance().get(appendParams(params.toString()));
@@ -70,8 +72,9 @@ public class TencentStockHandler extends AbsStockHandler {
         }
         for (int i = 0; i < symbols.size(); i++) {
             String symbol = symbols.get(i);
+            String code = getCode(symbol);
             String raw = raws[i];
-            String assertion = String.format("(?<=v_%s=\").*?(?=\";)", symbol);
+            String assertion = String.format("(?<=v_%s=\").*?(?=\";)", code);
             Pattern pattern = Pattern.compile(assertion);
             Matcher matcher = pattern.matcher(raw);
             while (matcher.find()) {
@@ -86,17 +89,20 @@ public class TencentStockHandler extends AbsStockHandler {
 //                stock.setTurnover(Double.parseDouble(metas[37]));
 //                stock.setMarketValue(Double.parseDouble(metas[45]));
 
-                String chPrefix = prefixTransform(symbol);
+                String chPrefix = prefixTransform(code);
                 //简要信息
                 if(StringUtils.isNotBlank(chPrefix)){
                     stock.setName(chPrefix+metas[1]);
                 } else {
                     stock.setName(metas[1]);
                 }
-                stock.setSymbol(symbol);
+                stock.setSymbol(code);
                 stock.setLatestPrice(Double.parseDouble(metas[3]));
                 stock.setChange(Double.parseDouble(metas[4]));
                 stock.setChangeRatio(Double.parseDouble(metas[5]));
+                stock.setCostPrice(getCostPrice(symbol));
+                stock.setStockNum(getStockNum(symbol));
+                stock.setProfit(getProfit(stock.getCostPrice(),stock.getLatestPrice(),stock.getStockNum()));
                 updateStock(stock);
             }
         }
@@ -117,5 +123,61 @@ public class TencentStockHandler extends AbsStockHandler {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取代码
+     * @param symbol
+     * @return
+     */
+    private String getCode(String symbol){
+        // 没设置成本和持股数，则直接使用代码拼接
+        if(symbol.contains(":")){
+            String[] arr = symbol.split(":");
+            return arr[0];
+        }
+        return symbol;
+    }
+
+    /**
+     * 成本价
+     * @param symbol
+     * @return
+     */
+    private double getCostPrice(String symbol){
+        // 没设置成本和持股数，则直接使用代码拼接
+        if(symbol.contains(":")){
+            String[] arr = symbol.split(":");
+            return Double.valueOf(arr[1]);
+        }
+        return 0.0;
+    }
+
+    /**
+     * 持股数
+     * @param symbol
+     * @return
+     */
+    private int getStockNum(String symbol){
+        // 没设置成本和持股数，则直接使用代码拼接
+        if(symbol.contains(":")){
+            String[] arr = symbol.split(":");
+            return Integer.valueOf(arr[2]);
+        }
+        return 0;
+    }
+
+    /**
+     * 盈利
+     * @param costPrice
+     * @param currentPrice
+     * @return
+     */
+    private double getProfit(double costPrice,double currentPrice,int stockNum){
+        if(costPrice==0.0||stockNum==0){
+            return 0.0;
+        }
+        double price = currentPrice-costPrice;
+        return price*stockNum;
     }
 }

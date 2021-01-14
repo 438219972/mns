@@ -5,6 +5,7 @@ import me.bytebeats.UISettingProvider;
 import me.bytebeats.tool.PinyinUtils;
 import me.bytebeats.tool.StringResUtils;
 import me.bytebeats.ui.AppSettingState;
+import org.apache.commons.lang3.ObjectUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -29,7 +30,11 @@ public abstract class AbstractHandler implements UISettingProvider {
     protected final JTable jTable;
     private final JLabel jLabel;
 
-    private final int[] numColumnIdx = {3, 4};//哪些列需要修改字体颜色, 当UI设置发生改变的时候.
+    //哪些列需要渲染时处理
+    private final int[] numColumnIdx = {3, 4, 5, 6, 7};
+
+    //哪些列需要渲染时处理，修改字体颜色
+    private final int[] numColumnColorIdx = {3, 4, 7};
 
     public AbstractHandler(JTable table, JLabel label) {
         this.jTable = table;
@@ -62,20 +67,38 @@ public abstract class AbstractHandler implements UISettingProvider {
 
     protected void updateRowTextColors() {
         for (int idx : numColumnIdx) {
+            int columnCount = jTable.getColumnCount();
+            if(idx>columnCount-1){
+                continue;
+            }
             jTable.getColumn(jTable.getColumnName(idx)).setCellRenderer(new DefaultTableCellRenderer() {
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                     double chg = 0.0;
                     try {
+//                        if(Double.parseDouble(value.toString())==0.0){
+//                            value = "0.0";
+//                        }
                         String chgRaw = value.toString();
+                        // 涨跌列去掉百分比符号
                         if (column == 4) {
                             chgRaw = chgRaw.substring(0, chgRaw.length() - 1);
                         }
                         chg = Double.parseDouble(chgRaw);
                     } catch (NumberFormatException e) {
+                        e.printStackTrace();
                         chg = 0.0;
                     }
-                    setForeground(getTextColor(chg));
+                    // 改变颜色
+                    boolean changeColor = false;
+                    for(int colorIdx: numColumnColorIdx){
+                        if(colorIdx == column){
+                            changeColor = true;
+                        }
+                    }
+                    if(changeColor) {
+                        setForeground(getTextColor(chg));
+                    }
                     return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 }
             });
