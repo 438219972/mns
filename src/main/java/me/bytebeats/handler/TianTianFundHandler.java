@@ -82,7 +82,8 @@ public class TianTianFundHandler extends AbstractHandler {
      */
 
     private void parse(String entity) {
-        String regExp = "(?<=jsonpgz\\()[^)]+";//正则表达式中的零宽断言, 该语句表示匹配 jsonpgz(xxx) 中的 xxx
+//        String regExp = "(?<=jsonpgz\\()[^)]+";//正则表达式中的零宽断言, 该语句表示匹配 jsonpgz(xxx) 中的 xxx
+        String regExp = "\\{(.+?)\\}";
         Pattern pattern = Pattern.compile(regExp);
         Matcher matcher = pattern.matcher(entity);
         while (matcher.find()) {
